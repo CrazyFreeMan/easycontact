@@ -4,7 +4,7 @@
  			<div>
  				{FILE "{PHP.cfg.themes_dir}/{PHP.cfg.defaulttheme}/warnings.tpl"}
  				<!-- BEGIN: FORM -->
- 				<form action="{EASYCONTACT_FORM_SEND}" class="close_help" id="help_form" method="POST">
+ 				<form action="{EASYCONTACT_FORM_SEND}" id="help_form" method="POST">
 	 				<div class="form-group">
 	 					{EASYCONTACT_FORM_USER_NAME}
 	 				</div>

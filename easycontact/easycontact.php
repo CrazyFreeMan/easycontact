@@ -1,7 +1,7 @@
 <?php
 /* ====================
 [BEGIN_COT_EXT]
-Hooks=header.tags
+Hooks=global
 [END_COT_EXT]
 ==================== */
 
@@ -115,7 +115,7 @@ defined('COT_CODE') or die('Wrong URL');
 					$text .= $L["user_phone"]." - ".$rtn["user_phone"];						
 					
 					cot_mail($semail, $cfg['plugin']['easycontact']['email_subj_add']." - ".$rtn['mail_subj'], $text, $headers);
-				
+					cot_log('Easycontact mail send', 'plg');
 				$array_config["user_name"]["value"] = "";
 				$array_config["user_mail"]["value"]  = "";
 				$array_config["user_phone"]["value"]  = "";
