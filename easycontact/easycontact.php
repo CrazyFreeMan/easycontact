@@ -14,15 +14,11 @@ Hooks=global
  * @copyright Copyright (c) CrazyFreeMan 2014
  * @license BSD
  */
-
-defined('COT_CODE') or die('Wrong URL');
-
-	require_once cot_langfile('easycontact', 'plug'); 
-	require_once cot_incfile('forms');
-	
-
+defined('COT_CODE') or die('Wrong URL');	
+		require_once cot_langfile('easycontact', 'plug'); 
+		require_once cot_incfile('forms');	
 	//генерація форми
-	function cot_easycontact_form($redirect = '/') {
+	function cot_easycontact_form($redirect = '/') {		
 		global $cfg, $L, $usr;
 
 		if(($cfg['plugin']['easycontact']['only_for_registred'] == '1' && $usr['id'] > 0) || 
@@ -68,7 +64,7 @@ defined('COT_CODE') or die('Wrong URL');
 			//перевірка телефону відправника
 			if($cfg['plugin']['easycontact']['use_input_phone'] == '1'){		
 				$user_phone = cot_import('user_phone', 'P', 'TXT');
-				if (empty($user_phone) || mb_strlen($user_phone) < 12 || !is_numeric($user_phone))
+				if (empty($user_phone) || mb_strlen($user_phone) < 12 ) //|| !is_numeric($user_phone) перевірка на число не актуально
 				{
 				    cot_error($L["err_phone"], 'user_phone');
 				}else{
@@ -115,7 +111,7 @@ defined('COT_CODE') or die('Wrong URL');
 					$text .= $L["user_phone"]." - ".$rtn["user_phone"];						
 					
 					cot_mail($semail, $cfg['plugin']['easycontact']['email_subj_add']." - ".$rtn['mail_subj'], $text, $headers);
-					cot_log('Easycontact mail send', 'plg');
+				
 				$array_config["user_name"]["value"] = "";
 				$array_config["user_mail"]["value"]  = "";
 				$array_config["user_phone"]["value"]  = "";
