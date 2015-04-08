@@ -9,7 +9,7 @@ Hooks=global
  * easycontact
  *
  * @package easycontact
- * @version 0.1
+ * @version 0.2
  * @author CrazyFreeMan
  * @copyright Copyright (c) CrazyFreeMan 2014
  * @license BSD
@@ -28,7 +28,7 @@ defined('COT_CODE') or die('Wrong URL');
 			$input_array = array();		
 			$array_config = array( 	
 									"user_name" => array("name" => "use_input_name", "value" => ""),
-									"user_mail" => array("name" => "use_input_mail", "value" => ""),
+									"user_email" => array("name" => "use_input_email", "value" => ""),
 									"user_phone" => array("name" => "use_input_phone", "value" => ""),
 									"mail_subj" => array("name" => "use_input_subj", "value" => "")
 									
@@ -50,21 +50,21 @@ defined('COT_CODE') or die('Wrong URL');
 				$rtn["user_name"] = false;
 			}
 			//перевірка пошти відправника
-			if($cfg['plugin']['easycontact']['use_input_mail'] == '1'){		
-				$user_mail = cot_import('user_mail', 'P', 'TXT');
-				if (empty($user_mail) || !cot_check_email($user_mail))
+			if($cfg['plugin']['easycontact']['use_input_email'] == '1'){		
+				$user_email = cot_import('user_email', 'P', 'TXT');
+				if (empty($user_email) || !cot_check_email($user_email))
 				{
-				    cot_error($L["err_mail"], 'user_mail');
+				    cot_error($L["err_mail"], 'user_email');
 				}else{
-						$rtn["user_mail"] = $user_mail;					
+						$rtn["user_email"] = $user_email;					
 				}
 			}else{
-				$rtn["user_mail"] = false;
+				$rtn["user_email"] = false;
 			}
 			//перевірка телефону відправника
 			if($cfg['plugin']['easycontact']['use_input_phone'] == '1'){		
 				$user_phone = cot_import('user_phone', 'P', 'TXT');
-				if (empty($user_phone) || mb_strlen($user_phone) < 12 ) //|| !is_numeric($user_phone) перевірка на число не актуально
+				if (empty($user_phone) || mb_strlen($user_phone) < $cfg['plugin']['easycontact']['input_phone_countnum'] ) //|| !is_numeric($user_phone) перевірка на число не актуально
 				{
 				    cot_error($L["err_phone"], 'user_phone');
 				}else{
@@ -88,7 +88,7 @@ defined('COT_CODE') or die('Wrong URL');
 			}
 
 			$array_config["user_name"]["value"] = $user_name;
-			$array_config["user_mail"]["value"]  = $user_mail;
+			$array_config["user_email"]["value"]  = $user_email;
 			$array_config["user_phone"]["value"]  = $user_phone;
 			$array_config["mail_subj"]["value"]  = $mail_subj;
 
@@ -100,11 +100,11 @@ defined('COT_CODE') or die('Wrong URL');
 					}
 
 					if($rtn["user_name"] == false){$rtn["user_name"] = $L["nodata"];}
-					if($rtn["user_mail"] == false){$rtn["user_mail"] = $L["nodata"];}
+					if($rtn["user_email"] == false){$rtn["user_email"] = $L["nodata"];}
 					if($rtn["mail_subj"] == false){$rtn["mail_subj"] = $L["nodata"];}
 					if($rtn["user_phone"] == false){$rtn["user_phone"] = $L["nodata"];}
 
-					$headers = ("From: \"" . $rtn["user_name"] . "\" <" . $rtn["user_mail"] . ">\n");
+					$headers = ("From: \"" . $rtn["user_name"] . "\" <" . $rtn["user_email"] . ">\n");
 
 					$text = $L["user_name"]." - ".$rtn["user_name"]."\n\r";
 					$text .= $L["mail_subj"]." - ".$rtn["mail_subj"]."\n\r"; 
@@ -114,7 +114,7 @@ defined('COT_CODE') or die('Wrong URL');
 					cot_log('Easycontact mail send', 'plg');
 					
 				$array_config["user_name"]["value"] = "";
-				$array_config["user_mail"]["value"]  = "";
+				$array_config["user_email"]["value"]  = "";
 				$array_config["user_phone"]["value"]  = "";
 				$array_config["mail_subj"]["value"]  = "";
 				cot_message('succ_send');			
@@ -125,9 +125,14 @@ defined('COT_CODE') or die('Wrong URL');
 		$cfg['plugin']['easycontact']['input_necessarily'] == '1' ? $necess = $L["input_necessarily"] : $necess ='';
 		
 		foreach ($array_config as $key => $value) {		
-			if($cfg['plugin']['easycontact'][$value["name"]] == '1'){							
-				$custom_add = "placeholder='".$L[$key]." ".$necess."' id='".$key."'";
-				$input_array[$key]= cot_inputbox('text',$key, $value["value"],$custom_add);
+			if($cfg['plugin']['easycontact'][$value["name"]] == '1'){
+				if (($key == "user_name" || $key ==  "user_email") && $usr['id'] > 0) {
+					$custom_add = $necess."' id='".$key."' readonly='readonly'";
+					$input_array[$key]= cot_inputbox('text',$key,$usr["profile"][$key],$custom_add);				
+											}else{							
+					$custom_add = "placeholder='".$L[$key]." ".$necess."' id='".$key."'";
+					$input_array[$key]= cot_inputbox('text',$key, $value["value"],$custom_add);
+				}
 			}
 		}
 		//завантаження шаблону

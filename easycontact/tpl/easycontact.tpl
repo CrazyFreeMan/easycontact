@@ -9,7 +9,7 @@
 	 					{EASYCONTACT_FORM_USER_NAME}
 	 				</div>
 	 				<div class="form-group">
-	 					{EASYCONTACT_FORM_USER_MAIL}
+	 					{EASYCONTACT_FORM_USER_EMAIL}
 	 				</div>
 	 				<div class="form-group">
 	 					{EASYCONTACT_FORM_USER_PHONE}
